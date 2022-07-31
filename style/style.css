@@ -1,6 +1,16 @@
 .container {
   font-size: 1rem;
+}
+
+body {
+  background-color: #111;
+  padding: 1em;
+  color: #eee;
   font-family: sans-serif;
+}
+
+a {
+  color: #88F;
 }
 
 /*# sourceMappingURL=style.css.map */
