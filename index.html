@@ -37,10 +37,8 @@
       )
         .then((x) => x.json())
         .then((x) => {
-          document.write(
+          document.querySelector(".container").innerHTML = 
             "<pre>" +
-              JSON.stringify(x.data).length +
-              "\n\n\n" +
               x.data
                 .sort((a, b) => a.times.primary_t - b.times.primary_t)
                 .sort((a, b) =>
@@ -57,9 +55,12 @@
                     )}</a> by ${r.players.data[0].names.international}`
                 )
                 .join("\n")
-          );
         });
     </script>
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      
+    </div>
+  </body>
 </html>
