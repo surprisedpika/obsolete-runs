@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style\reset.css" />
+    <link rel="stylesheet" href="style\style.css">
+    <title>Document</title>
+    <script>
+      function primary_t(str) {
+        str = str.substring(2, str.length);
+
+        let t = [
+          (str.match(/([^H]*)H/) || ["0"])[0],
+          (str.match(/([0-9]*)M/) || ["0"])[0],
+          (str.match(/([0-9\.]*)S/) || ["0"])[0],
+        ].map((x) => +x.replace(/[HMS]/g, ""));
+        let s = t.pop();
+        if (("" + s).includes(".")) {
+          s = ("" + s).split(".");
+          s[1] = (s[1] + "000").substring(0, 3);
+          s = s.join(".");
+          s = ("000000" + s).slice(-6);
+        } else s = ("0" + s).slice(-2);
+
+        t = t.map((x) => ("0" + x).slice(-2));
+
+        let time_str = `${t.join(":")}:${s}`;
+
+        while (time_str.startsWith(":") || time_str.startsWith("0"))
+          time_str = time_str.substring(1, time_str.length);
+        return time_str;
+      }
+      fetch(
+        "https://www.speedrun.com/api/v1/runs?game=3dxkx0g1&status=new&max=200&embed=category,players"
+      )
+        .then((x) => x.json())
+        .then((x) => {
+          document.write(
+            "<pre>" +
+              JSON.stringify(x.data).length +
+              "\n\n\n" +
+              x.data
+                .sort((a, b) => a.times.primary_t - b.times.primary_t)
+                .sort((a, b) =>
+                  a.players.data[0].names.international.localeCompare(
+                    b.players.data[0].names.international
+                  )
+                )
+                .map(
+                  (r) =>
+                    `${r.category.data.type == "per-level" ? "[IL]" : ""} ${
+                      r.category.data.name
+                    } in <a href="${r.weblink}" target="_blank">${primary_t(
+                      r.times.primary
+                    )}</a> by ${r.players.data[0].names.international}`
+                )
+                .join("\n")
+          );
+        });
+    </script>
+  </head>
+  <body></body>
+</html>
